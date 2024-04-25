@@ -1,6 +1,7 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 const button = document.querySelector('[data-start]');
+const timer = document.querySelector('.timer');
 let userSelectedDate;
 
 const options = {
@@ -42,9 +43,6 @@ console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20
 
 
 
-button.addEventListener('click', () => {
-    // const timer = setInterval(convertMs, 1000);
-    // if (convertMs === 0) {
-    //     clearInterval(timer);
-    // }
-});
+// button.addEventListener('click', () => {
+
+// });
