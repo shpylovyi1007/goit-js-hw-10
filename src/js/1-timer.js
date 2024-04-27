@@ -77,7 +77,7 @@ function startTimer(endTime) {
 button.addEventListener('click', () => {
     const selectedDate = new Date(datePicker.value).Date.now();
 
-    if (!isNaN(selectedDate)) {
+    if (selectedDate) {
         datePicker.disabled = true;
         button.disabled = true;
         startTimer(selectedDate);
