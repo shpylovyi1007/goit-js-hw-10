@@ -1,8 +1,10 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+
 const button = document.querySelector('[data-start]');
-const timer = document.querySelector('.timer');
-const datePicker = document.querySelector('datetime-picker');
+const datePicker = document.querySelector('#datetime-picker');
 const timerDays = document.querySelector('[data-days]');
 const timerHours = document.querySelector('[data-hours]');
 const timerMinutes = document.querySelector('[data-minutes]');
@@ -22,7 +24,15 @@ const options = {
             userSelectedDate = selectedDates[0];
             button.disabled = false;
         } else {
-            return alert("Please choose a date in the future");
+            iziToast.show({
+                message: 'Please choose a date in the future',
+                backgroundColor: '#EF4040',
+                borderBottom: '2px solid #FFBEBE',
+                borderRadius: '4px',
+                padding: '20px',
+                messageColor: '#FFF'
+            });
+            return;
         }
     },
 };
@@ -43,12 +53,6 @@ function convertMs(ms) {
     return { days, hours, minutes, seconds };
 };
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
-let countdownInterval;
-
 function updateTimer(ms) {
     const { days, hours, minutes, seconds } = convertMs(ms);
     timerDays.textContent = days;
@@ -57,31 +61,26 @@ function updateTimer(ms) {
     timerSeconds.textContent = seconds;
 };
 
-function startTimer(endTime) {
-    const endTimeMs = new Date(endTime).Date.now();
-    countdownInterval = setInterval(() => {
-        const now = new Date().Date.now();
-        const timeRemaining = endTimeMs - now;
+function startTimer(userSelectedDate) {
+    const countdownInterval = setInterval(() => {
+        const timeRemaining = userSelectedDate - Date.now();
 
-        if (timeRemaining <= 0) {
+        if (timeRemaining > 0) {
+            updateTimer(timeRemaining);
+        } else {
             clearInterval(countdownInterval);
             updateTimer(0);
             datePicker.disabled = false;
             button.disabled = false;
-        } else {
-            updateTimer(timeRemaining);
         }
     }, 1000);
 };
 
 button.addEventListener('click', () => {
-    const selectedDate = new Date(datePicker.value).Date.now();
 
-    if (selectedDate) {
+    if (startTimer) {
         datePicker.disabled = true;
         button.disabled = true;
-        startTimer(selectedDate);
-    } else {
-        alert('Please select a valid date.');
+        startTimer(userSelectedDate);
     }
 });
